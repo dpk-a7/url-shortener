@@ -1,6 +1,6 @@
 # URL Shortener RESTful API (Django)
 
-RL Shortener is a cloud-enabled, deploy-ready, Django-powered RESTful API.
+URL Shortener is a cloud-enabled, deploy-ready, Django-powered RESTful API.
 
 - Deploy with single docker-compose command
 - Handel 300 requests per second
