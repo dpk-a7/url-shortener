@@ -1,0 +1,45 @@
+version: '3'
+ 
+services:
+  db:
+    image: postgres:10-alpine
+    environment:
+      - POSTGRES_DB=app
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=supersecretpassword
+  redis:
+    image: redis:alpine
+    expose:
+      - 6379
+
+  app:
+    build: .
+    restart: always
+    environment:
+      - DB_HOST=db
+      - DB_NAME=app
+      - DB_USER=postgres
+      - DB_PASS=supersecretpassword
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    expose:
+      - 8000
+    depends_on:
+      - db
+      - redis
+
+  db_manager:
+    build: ./db_manager
+    restart: always
+    environment:
+      - DB_HOST=db
+      - DB_NAME=app
+      - DB_USER=postgres
+      - DB_PASS=supersecretpassword
+    depends_on:
+      - db
+  nginx:
+    build: ./nginx
+    ports:
+      - 8000:8001
+    depends_on:
+      - app
